@@ -51,6 +51,7 @@ const toggleMode = () => {
   <div class="auth-container">
     <div class="auth-card">
       <h2>{{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}</h2>
+      <h3>Calendario Simple App</h3>
 
       <form @submit.prevent="handleSubmit">
         <div class="form-group">
@@ -183,6 +184,11 @@ input:focus {
   margin-top: 1rem;
   text-align: center;
   font-size: 0.9rem;
+}
+/* Centrar el h3 del subtítulo */
+h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 </style>
 

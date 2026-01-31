@@ -1,0 +1,1 @@
+{"root":["./src/main.ts","./src/vite-env.d.ts","./src/lib/supabase.ts","./src/App.vue","./src/components/AuthForm.vue","./src/components/CalendarList.vue","./src/components/CalendarView.vue","./src/components/HelloWorld.vue","./src/components/ShareCalendar.vue"],"version":"5.9.3"}

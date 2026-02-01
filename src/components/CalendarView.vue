@@ -292,14 +292,15 @@ onMounted(() => {
   <div class="calendar-view">
     <div class="header">
       <div class="calendar-header-info">
-        <div class="calendar-color" :style="{ backgroundColor: calendar.color }"></div>
+
         <div>
           <div class="calendar-title-row">
-            <h2>{{ calendar.name }}</h2>
-            <span v-if="calendar.is_public" class="badge-public">Público</span>
+            <h3>{{ calendar.name }}</h3>
+
           </div>
           <p v-if="calendar.description">{{ calendar.description }}</p>
         </div>
+        <span v-if="calendar.is_public" class="badge-public">Público</span>
       </div>
       <div class="header-actions">
         <button @click="showForm = !showForm" class="btn-primary">
@@ -353,25 +354,13 @@ onMounted(() => {
         <button @click="nextWeek" class="btn-nav">→</button>
       </div>
       <div class="view-toggle">
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'month' }"
-          @click="viewMode = 'month'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'month' }" @click="viewMode = 'month'">
           Mes
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'week' }"
-          @click="viewMode = 'week'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'week' }" @click="viewMode = 'week'">
           Semana
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'list' }"
-          @click="viewMode = 'list'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'list' }" @click="viewMode = 'list'">
           Lista
         </button>
       </div>
@@ -384,25 +373,13 @@ onMounted(() => {
         <button @click="nextMonth" class="btn-nav">→</button>
       </div>
       <div class="view-toggle">
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'month' }"
-          @click="viewMode = 'month'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'month' }" @click="viewMode = 'month'">
           Mes
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'week' }"
-          @click="viewMode = 'week'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'week' }" @click="viewMode = 'week'">
           Semana
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'list' }"
-          @click="viewMode = 'list'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'list' }" @click="viewMode = 'list'">
           Lista
         </button>
       </div>
@@ -415,25 +392,13 @@ onMounted(() => {
         <button @click="nextListMonth" class="btn-nav">→</button>
       </div>
       <div class="view-toggle">
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'month' }"
-          @click="viewMode = 'month'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'month' }" @click="viewMode = 'month'">
           Mes
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'week' }"
-          @click="viewMode = 'week'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'week' }" @click="viewMode = 'week'">
           Semana
         </button>
-        <button
-          class="btn-toggle"
-          :class="{ active: String(viewMode) === 'list' }"
-          @click="viewMode = 'list'"
-        >
+        <button class="btn-toggle" :class="{ active: String(viewMode) === 'list' }" @click="viewMode = 'list'">
           Lista
         </button>
       </div>
@@ -442,22 +407,14 @@ onMounted(() => {
     <div v-if="loading" class="loading">Cargando eventos...</div>
 
     <div v-else-if="viewMode === 'week'" class="week-view">
-      <div
-        v-for="(day, index) in currentWeek"
-        :key="index"
-        class="day-column"
-      >
+      <div v-for="(day, index) in currentWeek" :key="index" class="day-column">
         <div class="day-header">
           <div class="day-name">{{ day.toLocaleDateString('es-ES', { weekday: 'short' }) }}</div>
           <div class="day-number">{{ day.getDate() }}</div>
         </div>
         <div class="day-bookings">
-          <div
-            v-for="booking in bookingsForDate(day)"
-            :key="booking.id"
-            class="booking-item"
-            :style="{ borderLeftColor: calendar.color }"
-          >
+          <div v-for="booking in bookingsForDate(day)" :key="booking.id" class="booking-item"
+            :style="{ borderLeftColor: calendar.color }">
             <div class="booking-time">
               {{ formatTime(booking.start_time) }} - {{ formatTime(booking.end_time) }}
             </div>
@@ -465,11 +422,7 @@ onMounted(() => {
             <div v-if="booking.description" class="booking-description">
               {{ booking.description }}
             </div>
-            <button
-              @click="deleteBooking(booking.id)"
-              class="btn-delete-small"
-              title="Eliminar"
-            >
+            <button @click="deleteBooking(booking.id)" class="btn-delete-small" title="Eliminar">
               ✖
             </button>
           </div>
@@ -487,28 +440,16 @@ onMounted(() => {
         </div>
       </div>
       <div class="month-grid">
-        <div
-          v-for="(day, index) in currentMonthDates"
-          :key="index"
-          class="month-day"
-          :class="{
-            'is-other-month': !isSameMonth(day),
-            'is-selected': isSameDay(day, selectedDate),
-            'has-bookings': bookingsForDate(day).length > 0
-          }"
-          @click="handleDayClick(day)"
-        >
+        <div v-for="(day, index) in currentMonthDates" :key="index" class="month-day" :class="{
+          'is-other-month': !isSameMonth(day),
+          'is-selected': isSameDay(day, selectedDate),
+          'has-bookings': bookingsForDate(day).length > 0
+        }" @click="handleDayClick(day)">
           <div class="month-day-number">{{ day.getDate() }}</div>
-          <div 
-            class="month-day-events"
-            :data-count="bookingsForDate(day).length > 0 ? `${bookingsForDate(day).length} ${bookingsForDate(day).length === 1 ? 'evento' : 'eventos'}` : ''"
-          >
-            <div
-              v-for="booking in bookingsForDate(day).slice(0, 2)"
-              :key="booking.id"
-              class="month-event-item"
-              :style="{ backgroundColor: calendar.color + '20', borderLeftColor: calendar.color }"
-            >
+          <div class="month-day-events"
+            :data-count="bookingsForDate(day).length > 0 ? `${bookingsForDate(day).length} ${bookingsForDate(day).length === 1 ? 'evento' : 'eventos'}` : ''">
+            <div v-for="booking in bookingsForDate(day).slice(0, 2)" :key="booking.id" class="month-event-item"
+              :style="{ backgroundColor: calendar.color + '20', borderLeftColor: calendar.color }">
               <span class="month-event-time">{{ formatTime(booking.start_time) }}</span>
               <span class="month-event-title">{{ booking.title }}</span>
             </div>
@@ -529,12 +470,8 @@ onMounted(() => {
         No hay eventos en este mes
       </div>
       <div v-else class="list-container">
-        <div
-          v-for="booking in bookingsForMonth(listMonth)"
-          :key="booking.id"
-          class="list-item"
-          :style="{ borderLeftColor: calendar.color }"
-        >
+        <div v-for="booking in bookingsForMonth(listMonth)" :key="booking.id" class="list-item"
+          :style="{ borderLeftColor: calendar.color }">
           <div class="list-item-header">
             <div class="list-item-date">
               <div class="list-date-day">
@@ -555,14 +492,11 @@ onMounted(() => {
             </div>
           </div>
           <div class="list-item-actions">
-            <button class="btn-secondary btn-small" @click="startEditBooking(booking); showDayModal = true; selectedDate = new Date(booking.start_time)">
+            <button class="btn-secondary btn-small"
+              @click="startEditBooking(booking); showDayModal = true; selectedDate = new Date(booking.start_time)">
               Editar
             </button>
-            <button
-              @click="deleteBooking(booking.id)"
-              class="btn-delete-small btn-small"
-              title="Eliminar"
-            >
+            <button @click="deleteBooking(booking.id)" class="btn-delete-small btn-small" title="Eliminar">
               ✖
             </button>
           </div>
@@ -580,12 +514,8 @@ onMounted(() => {
         <div v-if="bookingsForDate(selectedDate).length === 0" class="no-bookings">
           Sin eventos
         </div>
-        <div
-          v-for="booking in bookingsForDate(selectedDate)"
-          :key="booking.id"
-          class="booking-item"
-          :style="{ borderLeftColor: calendar.color }"
-        >
+        <div v-for="booking in bookingsForDate(selectedDate)" :key="booking.id" class="booking-item"
+          :style="{ borderLeftColor: calendar.color }">
           <div v-if="editingBookingId === booking.id" class="booking-edit">
             <div class="form-row">
               <div class="form-group">
@@ -638,11 +568,7 @@ onMounted(() => {
               <button class="btn-secondary btn-small" @click="startEditBooking(booking)">
                 Editar
               </button>
-              <button
-                @click="deleteBooking(booking.id)"
-                class="btn-delete-small btn-small"
-                title="Eliminar"
-              >
+              <button @click="deleteBooking(booking.id)" class="btn-delete-small btn-small" title="Eliminar">
                 ✖
               </button>
             </div>
@@ -1319,21 +1245,28 @@ textarea {
   .month-header,
   .month-grid {
     grid-template-columns: repeat(7, 1fr);
+    gap: 0.15rem;
   }
 
   .month-header-cell {
-    font-size: 0.65rem;
-    padding: 0.25rem 0;
+    font-size: 0.6rem;
+    padding: 0.2rem 0;
   }
 
   .month-day {
-    min-height: 60px;
-    padding: 0.25rem;
+    min-height: 55px;
+    padding: 0.15rem;
+    border-radius: 4px;
+  }
+
+  .month-day.has-bookings {
+    border: 2px solid #10b981;
+    background: rgba(16, 185, 129, 0.08);
   }
 
   .month-day-number {
-    font-size: 0.75rem;
-    margin-bottom: 0.25rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.15rem;
   }
 
   .month-event-item {
@@ -1350,7 +1283,7 @@ textarea {
 
   .month-day-events::after {
     content: attr(data-count);
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-muted);
     text-align: center;
     display: block;

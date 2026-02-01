@@ -499,7 +499,10 @@ onMounted(() => {
           @click="handleDayClick(day)"
         >
           <div class="month-day-number">{{ day.getDate() }}</div>
-          <div class="month-day-events">
+          <div 
+            class="month-day-events"
+            :data-count="bookingsForDate(day).length > 0 ? `${bookingsForDate(day).length} ${bookingsForDate(day).length === 1 ? 'evento' : 'eventos'}` : ''"
+          >
             <div
               v-for="booking in bookingsForDate(day).slice(0, 2)"
               :key="booking.id"
@@ -1266,6 +1269,49 @@ textarea {
 }
 
 @media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .calendar-header-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-back {
+    width: 100%;
+  }
+
+  .week-navigation,
+  .month-navigation,
+  .list-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .nav-buttons {
+    justify-content: center;
+  }
+
+  .view-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-toggle {
+    flex: 1;
+  }
+
   .week-view {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1281,33 +1327,33 @@ textarea {
   }
 
   .month-day {
-    min-height: 80px;
+    min-height: 60px;
     padding: 0.25rem;
   }
 
   .month-day-number {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-bottom: 0.25rem;
   }
 
   .month-event-item {
-    font-size: 0.65rem;
-    padding: 0.2rem 0.25rem;
-  }
-
-  .month-event-time,
-  .month-event-title {
-    font-size: 0.65rem;
+    display: none;
   }
 
   .month-event-more {
-    font-size: 0.65rem;
-    padding: 0.2rem 0.25rem;
+    display: none;
   }
 
   .month-day-empty {
+    display: none;
+  }
+
+  .month-day-events::after {
+    content: attr(data-count);
     font-size: 0.65rem;
-    padding: 0.25rem 0;
+    color: var(--text-muted);
+    text-align: center;
+    display: block;
   }
 
   .form-row {

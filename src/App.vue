@@ -170,7 +170,7 @@ watch(user, value => {
                   <span class="eyebrow">Simple. Rápido. Público.</span>
                   <h1>Tu calendario, listo en minutos.</h1>
                   <p>
-                    Creá un calendario simple, publicalo y compartí el link con tu grupo.
+                    Crea un calendario simple, publicalo y comparte el link con tu grupo.
                   </p>
                   <div class="hero-actions">
                     <a class="btn btn-primary btn-lg" href="#login">Crear calendario</a>
@@ -233,7 +233,7 @@ watch(user, value => {
                   <div class="step-card">
                     <div class="step-number">1</div>
                     <h3>Crea</h3>
-                    <p>Elege nombre y agregás eventos.</p>
+                    <p>Elige nombre y agregas eventos.</p>
                   </div>
                   <div class="step-card">
                     <div class="step-number">2</div>
@@ -298,11 +298,11 @@ watch(user, value => {
                 <div class="faq-grid">
                   <details>
                     <summary>¿Es gratis?</summary>
-                    <p>Sí. Podés crear y compartir sin costo.</p>
+                    <p>Sí. Puedes crear y compartir sin costo.</p>
                   </details>
                   <details>
                     <summary>¿Necesito cuenta?</summary>
-                    <p>No para ver. Para crear, podés hacerlo en segundos.</p>
+                    <p>No para ver. Para crear, puedes hacerlo en segundos.</p>
                   </details>
                   <details>
                     <summary>¿Quién puede ver el calendario?</summary>
@@ -314,31 +314,20 @@ watch(user, value => {
                   </details>
                   <details>
                     <summary>¿Puedo tener varios calendarios?</summary>
-                    <p>Sí. Creá uno por grupo o evento.</p>
+                    <p>Sí. Crea uno por grupo o evento.</p>
                   </details>
                 </div>
               </div>
             </section>
 
-            <section class="section cta">
-              <div class="container cta-box">
-                <div>
-                  <h2>Crea tu calendario hoy</h2>
-                  <p>Tu grupo lo ve al instante. Vos seguís editando cuando quieras.</p>
-                </div>
-                <div class="cta-actions">
-                  <a class="btn btn-primary btn-lg" href="#login">Crear calendario</a>
- 
-                </div>
-              </div>
-            </section>
+           
           </main>
 
           <footer class="footer">
             <div class="container footer-inner">
               <div>
                 <div class="logo">CalendarioSimple</div>
-                <p>Calendarios simples para gente real.</p>
+                <p>Menos es más.</p>
               </div>
               <div class="footer-links">
                 <a href="#como-funciona">Cómo funciona</a>

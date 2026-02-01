@@ -28,6 +28,7 @@ const weekStart = ref(new Date())
 const viewMode = ref<'month' | 'week'>('month')
 const currentMonth = ref(new Date())
 const currentMonthDates = ref<Date[]>([])
+const listMonth = ref(new Date())
 const selectedDate = ref(new Date())
 const showDayModal = ref(false)
 const editingBookingId = ref<string | null>(null)
@@ -115,6 +116,14 @@ const nextMonth = () => {
   selectedDate.value = new Date(currentMonth.value)
 }
 
+const previousListMonth = () => {
+  listMonth.value = new Date(listMonth.value.getFullYear(), listMonth.value.getMonth() - 1, 1)
+}
+
+const nextListMonth = () => {
+  listMonth.value = new Date(listMonth.value.getFullYear(), listMonth.value.getMonth() + 1, 1)
+}
+
 const formatMonthTitle = (date: Date) => {
   return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })
 }
@@ -141,6 +150,13 @@ const bookingsForDate = (date: Date) => {
 
     return dayDate >= startDateOnly && dayDate <= endDateOnly
   }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+}
+
+const bookingsForMonth = (month: Date) => {
+  return bookings.value.filter(b => {
+    const startDate = new Date(b.start_time)
+    return startDate.getMonth() === month.getMonth() && startDate.getFullYear() === month.getFullYear()
+  })
 }
 
 const handleDayClick = (day: Date) => {
@@ -203,7 +219,7 @@ const createBooking = async () => {
     showForm.value = false
     await loadBookings()
   } catch (error: any) {
-    alert('Error al crear reserva: ' + error.message)
+    alert('Error al crear evento: ' + error.message)
   }
 }
 
@@ -245,12 +261,12 @@ const updateBooking = async (id: string) => {
     editingBookingId.value = null
     await loadBookings()
   } catch (error: any) {
-    alert('Error al actualizar reserva: ' + error.message)
+    alert('Error al actualizar evento: ' + error.message)
   }
 }
 
 const deleteBooking = async (id: string) => {
-  if (!confirm('¿Eliminar esta reserva?')) return
+  if (!confirm('¿Eliminar este evento?')) return
 
   try {
     const { error } = await supabase
@@ -286,27 +302,11 @@ onMounted(() => {
         </div>
       </div>
       <div class="header-actions">
-        <div class="view-toggle">
-          <button
-            class="btn-toggle"
-            :class="{ active: viewMode === 'month' }"
-            @click="viewMode = 'month'"
-          >
-            Mes
-          </button>
-          <button
-            class="btn-toggle"
-            :class="{ active: viewMode === 'week' }"
-            @click="viewMode = 'week'"
-          >
-            Semana
-          </button>
-        </div>
         <button @click="showForm = !showForm" class="btn-primary">
-          {{ showForm ? 'Cancelar' : '+ Nueva Reserva' }}
+          {{ showForm ? 'Cancelar' : '+ Nuevo Evento' }}
         </button>
         <button @click="emit('share')" class="btn-secondary">Compartir</button>
-        <button @click="emit('back')" class="btn-back">Volver</button>
+        <button @click="emit('back')" class="btn-back">Mis calendarios</button>
       </div>
     </div>
 
@@ -342,23 +342,104 @@ onMounted(() => {
           <label>Descripción</label>
           <textarea v-model="newBooking.description" placeholder="Detalles opcionales"></textarea>
         </div>
-        <button type="submit" class="btn-primary">Crear Reserva</button>
+        <button type="submit" class="btn-primary">Crear Evento</button>
       </form>
     </div>
 
     <div v-if="viewMode === 'week'" class="week-navigation">
-      <button @click="previousWeek" class="btn-nav">←</button>
-      <h3>Semana del {{ formatDate(currentWeek[0]?.toISOString()) }}</h3>
-      <button @click="nextWeek" class="btn-nav">→</button>
+      <div class="nav-buttons">
+        <button @click="previousWeek" class="btn-nav">←</button>
+        <h3>Semana del {{ formatDate(currentWeek[0]?.toISOString()) }}</h3>
+        <button @click="nextWeek" class="btn-nav">→</button>
+      </div>
+      <div class="view-toggle">
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'month' }"
+          @click="viewMode = 'month'"
+        >
+          Mes
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'week' }"
+          @click="viewMode = 'week'"
+        >
+          Semana
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'list' }"
+          @click="viewMode = 'list'"
+        >
+          Lista
+        </button>
+      </div>
     </div>
 
-    <div v-else class="month-navigation">
-      <button @click="previousMonth" class="btn-nav">←</button>
-      <h3>{{ formatMonthTitle(currentMonth) }}</h3>
-      <button @click="nextMonth" class="btn-nav">→</button>
+    <div v-else-if="viewMode === 'month'" class="month-navigation">
+      <div class="nav-buttons">
+        <button @click="previousMonth" class="btn-nav">←</button>
+        <h3>{{ formatMonthTitle(currentMonth) }}</h3>
+        <button @click="nextMonth" class="btn-nav">→</button>
+      </div>
+      <div class="view-toggle">
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'month' }"
+          @click="viewMode = 'month'"
+        >
+          Mes
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'week' }"
+          @click="viewMode = 'week'"
+        >
+          Semana
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'list' }"
+          @click="viewMode = 'list'"
+        >
+          Lista
+        </button>
+      </div>
     </div>
 
-    <div v-if="loading" class="loading">Cargando reservas...</div>
+    <div v-else-if="viewMode === 'list'" class="list-navigation">
+      <div class="nav-buttons">
+        <button @click="previousListMonth" class="btn-nav">←</button>
+        <h3>{{ formatMonthTitle(listMonth) }}</h3>
+        <button @click="nextListMonth" class="btn-nav">→</button>
+      </div>
+      <div class="view-toggle">
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'month' }"
+          @click="viewMode = 'month'"
+        >
+          Mes
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'week' }"
+          @click="viewMode = 'week'"
+        >
+          Semana
+        </button>
+        <button
+          class="btn-toggle"
+          :class="{ active: viewMode === 'list' }"
+          @click="viewMode = 'list'"
+        >
+          Lista
+        </button>
+      </div>
+    </div>
+
+    <div v-if="loading" class="loading">Cargando eventos...</div>
 
     <div v-else-if="viewMode === 'week'" class="week-view">
       <div
@@ -393,13 +474,13 @@ onMounted(() => {
             </button>
           </div>
           <div v-if="bookingsForDate(day).length === 0" class="no-bookings">
-            Sin reservas
+            Sin eventos
           </div>
         </div>
       </div>
     </div>
 
-    <div v-else class="month-view">
+    <div v-else-if="viewMode === 'month'" class="month-view">
       <div class="month-header">
         <div class="month-header-cell" v-for="day in ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom']" :key="day">
           {{ day }}
@@ -418,26 +499,83 @@ onMounted(() => {
           @click="handleDayClick(day)"
         >
           <div class="month-day-number">{{ day.getDate() }}</div>
-          <div class="month-day-count">
-            <span v-if="bookingsForDate(day).length > 0">
-              {{ bookingsForDate(day).length }} reservas
-            </span>
-            <span v-else class="month-day-empty">Sin reservas</span>
+          <div class="month-day-events">
+            <div
+              v-for="(booking, idx) in bookingsForDate(day).slice(0, 2)"
+              :key="booking.id"
+              class="month-event-item"
+              :style="{ backgroundColor: calendar.color + '20', borderLeftColor: calendar.color }"
+            >
+              <span class="month-event-time">{{ formatTime(booking.start_time) }}</span>
+              <span class="month-event-title">{{ booking.title }}</span>
+            </div>
+            <div v-if="bookingsForDate(day).length > 2" class="month-event-more">
+              +{{ bookingsForDate(day).length - 2 }} más
+            </div>
+            <div v-if="bookingsForDate(day).length === 0" class="month-day-empty">
+              Sin eventos
+            </div>
           </div>
         </div>
       </div>
 
     </div>
 
+    <div v-else-if="viewMode === 'list'" class="list-view">
+      <div v-if="bookingsForMonth(listMonth).length === 0" class="no-bookings">
+        No hay eventos en este mes
+      </div>
+      <div v-else class="list-container">
+        <div
+          v-for="booking in bookingsForMonth(listMonth)"
+          :key="booking.id"
+          class="list-item"
+          :style="{ borderLeftColor: calendar.color }"
+        >
+          <div class="list-item-header">
+            <div class="list-item-date">
+              <div class="list-date-day">
+                {{ formatDate(booking.start_time) }}
+                <span v-if="formatDate(booking.start_time) !== formatDate(booking.end_time)">
+                  - {{ formatDate(booking.end_time) }}
+                </span>
+              </div>
+              <div class="list-date-time">
+                {{ formatTime(booking.start_time) }} - {{ formatTime(booking.end_time) }}
+              </div>
+            </div>
+            <div class="list-item-content">
+              <div class="list-item-title">{{ booking.title }}</div>
+              <div v-if="booking.description" class="list-item-description">
+                {{ booking.description }}
+              </div>
+            </div>
+          </div>
+          <div class="list-item-actions">
+            <button class="btn-secondary btn-small" @click="startEditBooking(booking); showDayModal = true; selectedDate = new Date(booking.start_time)">
+              Editar
+            </button>
+            <button
+              @click="deleteBooking(booking.id)"
+              class="btn-delete-small btn-small"
+              title="Eliminar"
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-if="showDayModal" class="day-modal">
       <div class="day-modal-backdrop" @click="closeDayModal"></div>
       <div class="day-modal-content">
         <div class="day-modal-header">
-          <h4>Reservas del {{ formatDateFromDate(selectedDate) }}</h4>
+          <h4>Eventos del {{ formatDateFromDate(selectedDate) }}</h4>
           <button class="btn-close" @click="closeDayModal">✖</button>
         </div>
         <div v-if="bookingsForDate(selectedDate).length === 0" class="no-bookings">
-          Sin reservas
+          Sin eventos
         </div>
         <div
           v-for="booking in bookingsForDate(selectedDate)"
@@ -695,17 +833,19 @@ textarea {
 .week-navigation {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2rem;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .month-navigation {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 2rem;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .week-navigation h3 {
@@ -717,6 +857,36 @@ textarea {
   margin: 0;
   font-size: 1.2rem;
   text-transform: capitalize;
+}
+
+.list-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.list-navigation .view-toggle,
+.month-navigation .view-toggle,
+.week-navigation .view-toggle {
+  margin-left: auto;
+}
+
+.list-navigation h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-buttons h3 {
+  margin: 0 0.5rem;
 }
 
 .btn-nav {
@@ -776,11 +946,13 @@ textarea {
 .month-day {
   background: var(--surface-1);
   border-radius: 8px;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid var(--border);
   min-height: 110px;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
+  display: flex;
+  flex-direction: column;
 }
 
 .month-day:hover {
@@ -793,31 +965,136 @@ textarea {
 
 .month-day.is-selected {
   border-color: var(--primary);
-  background: rgba(59, 130, 246, 0.12);
-}
-
-.month-day.has-bookings {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.35);
-}
-
-.month-day.has-bookings.is-selected {
-  background: rgba(239, 68, 68, 0.18);
-  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(59, 130, 246, 0.08);
 }
 
 .month-day-number {
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
 }
 
-.month-day-count {
-  font-size: 0.85rem;
+.month-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.month-event-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  border-left: 3px solid;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  overflow: hidden;
+}
+
+.month-event-time {
+  font-weight: 600;
   color: var(--text-muted-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.month-event-title {
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.month-event-more {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 0.25rem 0.4rem;
+  text-align: center;
 }
 
 .month-day-empty {
   color: var(--text-faint);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.list-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.list-item {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  transition: background 0.2s;
+}
+
+.list-item:hover {
+  background: var(--surface-2);
+}
+
+.list-item-header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.list-item-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 120px;
+}
+
+.list-date-day {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.list-date-time {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.list-item-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.list-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .day-modal {
@@ -995,11 +1272,66 @@ textarea {
 
   .month-header,
   .month-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .month-header-cell {
+    font-size: 0.65rem;
+    padding: 0.25rem 0;
+  }
+
+  .month-day {
+    min-height: 80px;
+    padding: 0.25rem;
+  }
+
+  .month-day-number {
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .month-event-item {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.25rem;
+  }
+
+  .month-event-time,
+  .month-event-title {
+    font-size: 0.65rem;
+  }
+
+  .month-event-more {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.25rem;
+  }
+
+  .month-day-empty {
+    font-size: 0.65rem;
+    padding: 0.25rem 0;
   }
 
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-item-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .list-item-date {
+    min-width: auto;
+  }
+
+  .list-item-actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 </style>

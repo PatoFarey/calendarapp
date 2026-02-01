@@ -169,9 +169,9 @@ onMounted(async () => {
           <div class="month-day-number">{{ day.getDate() }}</div>
           <div class="month-day-count">
             <span v-if="bookingsForDate(day).length > 0">
-              {{ bookingsForDate(day).length }} reservas
+              {{ bookingsForDate(day).length }} eventos
             </span>
-            <span v-else class="month-day-empty">Sin reservas</span>
+            <span v-else class="month-day-empty">Sin eventos</span>
           </div>
         </div>
       </div>
@@ -182,11 +182,11 @@ onMounted(async () => {
     <div class="day-modal-backdrop" @click="closeDayModal"></div>
     <div class="day-modal-content">
       <div class="day-modal-header">
-        <h4>Reservas del {{ formatDateFromDate(selectedDate) }}</h4>
+        <h4>Eventos del {{ formatDateFromDate(selectedDate) }}</h4>
         <button class="btn-close" @click="closeDayModal">✖</button>
       </div>
       <div v-if="bookingsForDate(selectedDate).length === 0" class="loading">
-        Sin reservas
+        Sin eventos
       </div>
       <div
         v-for="booking in bookingsForDate(selectedDate)"

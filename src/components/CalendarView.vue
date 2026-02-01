@@ -355,21 +355,21 @@ onMounted(() => {
       <div class="view-toggle">
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'month' }"
+          :class="{ active: String(viewMode) === 'month' }"
           @click="viewMode = 'month'"
         >
           Mes
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'week' }"
+          :class="{ active: String(viewMode) === 'week' }"
           @click="viewMode = 'week'"
         >
           Semana
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'list' }"
+          :class="{ active: String(viewMode) === 'list' }"
           @click="viewMode = 'list'"
         >
           Lista
@@ -386,21 +386,21 @@ onMounted(() => {
       <div class="view-toggle">
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'month' }"
+          :class="{ active: String(viewMode) === 'month' }"
           @click="viewMode = 'month'"
         >
           Mes
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'week' }"
+          :class="{ active: String(viewMode) === 'week' }"
           @click="viewMode = 'week'"
         >
           Semana
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'list' }"
+          :class="{ active: String(viewMode) === 'list' }"
           @click="viewMode = 'list'"
         >
           Lista
@@ -417,21 +417,21 @@ onMounted(() => {
       <div class="view-toggle">
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'month' }"
+          :class="{ active: String(viewMode) === 'month' }"
           @click="viewMode = 'month'"
         >
           Mes
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'week' }"
+          :class="{ active: String(viewMode) === 'week' }"
           @click="viewMode = 'week'"
         >
           Semana
         </button>
         <button
           class="btn-toggle"
-          :class="{ active: viewMode === 'list' }"
+          :class="{ active: String(viewMode) === 'list' }"
           @click="viewMode = 'list'"
         >
           Lista

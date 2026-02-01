@@ -25,7 +25,7 @@ const newBooking = ref({
 
 const currentWeek = ref<Date[]>([])
 const weekStart = ref(new Date())
-const viewMode = ref<'month' | 'week'>('month')
+const viewMode = ref<'month' | 'week' | 'list'>('month')
 const currentMonth = ref(new Date())
 const currentMonthDates = ref<Date[]>([])
 const listMonth = ref(new Date())
@@ -501,7 +501,7 @@ onMounted(() => {
           <div class="month-day-number">{{ day.getDate() }}</div>
           <div class="month-day-events">
             <div
-              v-for="(booking, idx) in bookingsForDate(day).slice(0, 2)"
+              v-for="booking in bookingsForDate(day).slice(0, 2)"
               :key="booking.id"
               class="month-event-item"
               :style="{ backgroundColor: calendar.color + '20', borderLeftColor: calendar.color }"

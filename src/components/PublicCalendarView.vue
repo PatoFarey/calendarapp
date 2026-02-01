@@ -85,12 +85,6 @@ const isSameMonth = (date: Date) => {
     date.getFullYear() === currentMonth.value.getFullYear()
 }
 
-const isSameDay = (a: Date, b: Date) => {
-  return a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-}
-
 const bookingsForDate = (date: Date) => {
   const dayDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
 

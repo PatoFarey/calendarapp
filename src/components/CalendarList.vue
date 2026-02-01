@@ -557,6 +557,38 @@ input[type="color"] {
   font-size: 0.85rem;
   font-weight: 500;
 }
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .header h2 {
+    text-align: center;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .calendar-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .calendar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .btn-secondary,
+  .btn-delete {
+    flex: 1;
+  }
+}
 </style>
 
 
